@@ -1,7 +1,6 @@
 var id = "";
-var life = 3;
+var life = 2;
 var spawnEnemyList = new Array();
-
 
 
 
@@ -51,7 +50,11 @@ function getData(){
         {
             if(!shortestBuff){shortestBuff = entL[d];}
 
-            else if(player.distanceTo(shortestBuff) > player.distanceTo(entL[d])){shortestBuff = entL[d];}
+            else if(
+                (player && player.distanceTo(shortestBuff) > player.distanceTo(entL[d])) ||
+                (player2 && player2.distanceTo(shortestBuff) > player.distanceTo(entL[d]))
+
+                ){shortestBuff = entL[d];}
         }
     }
     var buffer = 0;
@@ -142,3 +145,5 @@ id = yourNumber.toString(16);
     });
 
 }
+
+createPW();
