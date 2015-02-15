@@ -36,16 +36,34 @@ ig.module(
 			checkDistance: function(){
 				var player = ig.game.getEntityByName("player");
 				var player2 = ig.game.getEntityByName("player2");
+				var player3 = ig.game.getEntityByName("player3");
+				var player4 = ig.game.getEntityByName("player4");
 				
 				
 
 
-				 if(((player && this.distanceTo( player) <= 32) || (player2 && this.distanceTo( player2) <= 32)))
+				 if((
+				 	(player && this.distanceTo( player) <= 32)
+				 	 || 
+				 	 (player2 && this.distanceTo( player2) <= 32)
+				 	 ||
+				 	  (player3 && this.distanceTo( player3) <= 32)
+				 	 ||
+				 	  (player4 && this.distanceTo( player4) <= 32)
+				 	 ))
 				{
 					this.triggered = true;	
 					this.currentAnim = this.anims.triggered;
 				}
-				else if(((player && this.distanceTo(player) > 32) || (player2 && this.distanceTo( player2) > 32)) ){
+				else if((
+					(player && this.distanceTo(player) > 32) 
+					|| 
+					(player2 && this.distanceTo( player2) > 32)
+					|| 
+					(player3 && this.distanceTo( player3) > 32)
+					|| 
+					(player4 && this.distanceTo( player4) > 32)
+					) ){
 					this.triggered = false;
 					this.currentAnim = this.anims.idle;	
 			
@@ -59,7 +77,7 @@ ig.module(
 				this.parent();
 			},
 			check: function(other){
-				if((other.name === "player" || other.name === "player2") && this.toggleTrigger === "true")
+				if((other.name === "player" || other.name === "player2" ||other.name ==="player3" || other.name ==="player4") && this.toggleTrigger === "true")
 				{
 	
 					this.triggered = true;	

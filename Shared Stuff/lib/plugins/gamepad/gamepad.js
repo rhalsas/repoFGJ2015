@@ -1,7 +1,12 @@
 /*
 gamepad.js, See README for copyright and usage instructions.
+https://github.com/danthewolfe/impact-gamepad.js
+Thanks for doing this plugin!
 }
 */
+
+//Some modifications for the game done.
+
 ig.module(
 	'plugins.gamepad.gamepad'
 )
@@ -158,13 +163,21 @@ ig.module(
         active: true
     };
 	//Added stuff by Evasleipa
+	Gamepad.padExists = function(n)
+	{
+		var gamepads = Gamepad.getStates();
+		if(gamepads[n])return true;
+		return false;
+	}
 	Gamepad.getPad = function(ent,number)
 	{
 		//if (Gamepad.mappings.active == false) return;
         var gamepads = Gamepad.getStates();
 
-			if(!gamepads[number-1] && !ent) return;
-            pad = gamepads[number-1];
+			if(!gamepads[number] && !ent) return;
+            pad = gamepads[number];
+			
+			
 			
 			return pad;
         

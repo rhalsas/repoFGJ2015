@@ -5,13 +5,13 @@ LevelLevel_2=/*JSON[*/{
 	"entities": [
 		{
 			"type": "EntityMonster2",
-			"x": 3716,
-			"y": 2434
+			"x": 2608,
+			"y": 2470
 		},
 		{
 			"type": "EntityMonster2",
-			"x": 2720,
-			"y": 2654
+			"x": 3552,
+			"y": 2602
 		},
 		{
 			"type": "EntityDoorhori",
@@ -29,9 +29,19 @@ LevelLevel_2=/*JSON[*/{
 			"y": 1718
 		},
 		{
+			"type": "EntityMonster2",
+			"x": 2720,
+			"y": 2654
+		},
+		{
 			"type": "EntityMonster1",
 			"x": 2812,
 			"y": 2098
+		},
+		{
+			"type": "EntityMonster2",
+			"x": 3716,
+			"y": 2434
 		},
 		{
 			"type": "EntityMonster1",
@@ -1071,16 +1081,6 @@ LevelLevel_2=/*JSON[*/{
 			"type": "EntityMonster2",
 			"x": 3432,
 			"y": 1710
-		},
-		{
-			"type": "EntityMonster2",
-			"x": 2608,
-			"y": 2470
-		},
-		{
-			"type": "EntityMonster2",
-			"x": 3552,
-			"y": 2602
 		},
 		{
 			"type": "EntityMonster1",

@@ -1,11 +1,11 @@
 ig.module(
-	'game.entities.player2'
+	'game.entities.player3'
 	)
 .requires(
 	'game.entities.player'
 	)
 .defines(function(){
-		EntityPlayer2 = EntityPlayer.extend({
+		EntityPlayer3 = EntityPlayer.extend({
 			type: ig.Entity.TYPE.A,
 			collides: ig.Entity.COLLIDES.ACTIVE,
 			gravityFactor: 0,
@@ -13,7 +13,7 @@ ig.module(
 			offset: {x:16, y:10},
 			maxVel: {x: 600, y:600},
 			friction: { x: 0, y: 0 },
-			name: "player2",
+			name: "player3",
 			delayGun: null,
 			delayShotGun: null,
 			health: 100,
@@ -23,19 +23,18 @@ ig.module(
 			circle: null,
 			prevX: 0,
 			prevY: 0,
-			action1: 'action1_2',
-			action2: 'action2_2',
-			action3: 'action3_2',
-			action4: 'action4_2',
-			action5: 'action5_2',
-			action6: 'action6_2',
-			xhair_imgurl: 'media/crosshair_blue_16.png',
+			action1: 'action1_3',
+			action2: 'action2_3',
+			action3: 'action3_3',
+			action4: 'action4_3',
+			action5: 'action5_3',
+			action6: 'action6_3',
+			xhair_imgurl: 'media/crosshair_green_16.png',
 			isColliding: false,
-			animSheet: new ig.AnimationSheet('media/char_blue_sprite_64.png', 64, 64),
+			animSheet: new ig.AnimationSheet('media/char_green_sprite_64.png', 64, 64),
 			playerNro: -1,
 			keyboardNro: -1,
 			keyboardRegistered: false
-
 
 			});
 	

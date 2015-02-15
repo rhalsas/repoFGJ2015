@@ -44,6 +44,9 @@ ig.module(
 			update: function(){
 				var player = ig.game.getEntityByName("player");
 				var player2 = ig.game.getEntityByName("player2");
+				var player3 = ig.game.getEntityByName("player3");
+				var player4 = ig.game.getEntityByName("player4");
+
 				var canOpen = true;
 
 				if(this.checkType === false){
@@ -75,7 +78,15 @@ ig.module(
 					}
 				}
 			
-				if( ((player && this.distanceTo (player) < 64) || (player2 && this.distanceTo( player2) < 64))  && canOpen === true)
+				if( (
+					(player && this.distanceTo (player) < 64) 
+					|| 
+					(player2 && this.distanceTo( player2) < 64)
+					||
+					(player3 && this.distanceTo( player3) < 64)
+					||
+					(player4 && this.distanceTo( player4) < 64)
+					)  && canOpen === true)
 				{
 					
 					if(this.currentAnim === this.anims.opening)
@@ -91,7 +102,15 @@ ig.module(
 					this.isOpen = true;
 					}
 				}
-				else if(((player && this.distanceTo( player) > 64) || (player2 && this.distanceTo( player2) > 64)) ){
+				else if((
+					(player && this.distanceTo( player) > 64) 
+					|| 
+					(player2 && this.distanceTo( player2) > 64)
+					|| 
+					(player3 && this.distanceTo( player3) > 64)
+					|| 
+					(player4 && this.distanceTo( player4) > 64)
+					) ){
 					if(this.currentAnim != this.anims.closing ||this.currentAnim != this.anims.open)
 					{
 						

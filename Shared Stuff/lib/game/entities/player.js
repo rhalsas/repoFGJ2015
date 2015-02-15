@@ -2,8 +2,8 @@ ig.module(
 	'game.entities.player'
 	)
 .requires(
-	'impact.entity',
-	'game.entities.player2'
+	'impact.entity'
+	
 	)
 .defines(function(){
 		EntityPlayer = ig.Entity.extend({
@@ -25,13 +25,24 @@ ig.module(
 			prevX: 0,
 			prevY: 0,
 			isColliding: false,
+			action1: 'action1',
+			action2: 'action2',
+			action3: 'action3',
+			action4: 'action4',
+			action5: 'action5',
+			action6: 'action6',
+			xhair_imgurl: 'media/crosshair_red_16.png',
+			animSheet: new ig.AnimationSheet('media/char_red_sprite_64.png', 64, 64),
+			keyboardRegistered: false,
+			keyboardNro: -1,
+			playerNro: -1,
 			init: function(x,y,settings){
 				this.parent(x, y, settings );
-				this.animSheet = new ig.AnimationSheet('media/char_red_sprite_64.png', 64, 64);
+			
 				this.addAnim('idle',1, [0]);
 				this.addAnim('run',0.15, [0,1,2,3]);
-				if(!ig.global.wm ) ig.game.spawnEntity("EntityCircle1", this.pos.x + this.size.x/2, this.pos.y + this.size.y/2);
-		
+				if(!ig.global.wm ) ig.game.spawnEntity("EntityCircle", this.pos.x + 8, this.pos.y - 16, {imgurl: this.xhair_imgurl});
+				this.circle = ig.game.getEntityByName("circle");
 				this.maxHealth = this.health;
 				this.zIndex = 1;
 				this.delayGun = new ig.Timer();
@@ -39,15 +50,50 @@ ig.module(
 
 				this.delayShotGun = new ig.Timer();
 				this.delayShotGun.set(0.5);
-				if(!ig.global.wm )this.pad = Gamepad.getPad(this,1);
 
+
+				if(!ig.global.wm )this.pad = Gamepad.getPad(this,this.playerNro);
+				
+				switch(this.playerNro)
+				{
+				case 0:
+				this.action5 = 'action5';
+				this.action6 = 'action6';
+				break;
+				case 1:
+				this.action5 = 'action5_2';
+				this.action6 = 'action6_2';
+				break;
+				case 2:
+				this.action5 = 'action5_3';
+				this.action6 = 'action6_3';
+				break;
+				case 3:
+				this.action5 = 'action5_4';
+				this.action6 = 'action6_4';
+				break;
+				}
+				
+		
 			},
+			
 			update: function(){
 				
-				if(!this.circle) this.circle = ig.game.getEntityByName("circle1");
-			
+		
 
-				if(ig.input.state('action5')){
+
+				if((
+				(ig.input.state(this.action5)  && this.keyboardRegistered === false  && this.playerNro != -1)
+					|| 
+				
+					(ig.input.state('action5_5') && this.keyboardNro === 0 )
+					||
+					(ig.input.state('action5_6') && this.keyboardNro === 1 )
+					
+					
+					)
+					 && this.circle){
+					
 					if(this.delayGun.delta() > 0){
 
  					ig.game.spawnEntity("EntityLazor",(this.pos.x + this.size.x/2),(this.pos.y + this.size.y/2), {angle: this.angleTo(this.circle) });
@@ -58,7 +104,13 @@ ig.module(
 					
 
 				}
-				else if(ig.input.state('action6')){
+				else if((ig.input.state(this.action6)  && this.keyboardRegistered === false)
+					|| 
+					(ig.input.state('action6_5') && this.keyboardNro === 0 )
+					||
+					(ig.input.state('action6_6') && this.keyboardNro === 1 )
+					)
+					{
 					if(this.delayShotGun.delta() > 0)
 					{
 					 ig.game.spawnEntity("EntityLazor",(this.pos.x + this.size.x/2),(this.pos.y + this.size.y/2), {angle: this.angleTo(this.circle)- Math.PI/32 });
@@ -80,7 +132,7 @@ ig.module(
 
 
 		*/
-				if(this.pad)
+				if(this.pad && !this.keyboardRegistered)
 				{
 
 					if(Math.abs(this.pad.leftStickX) > 0.20 )
@@ -92,6 +144,7 @@ ig.module(
 					if(Math.abs(this.pad.leftStickY) > 0.20 )
 					{
 						this.vel.y = this.pad.leftStickY * 115;
+
 					}
 					else{this.vel.y = 0;}
 
@@ -113,14 +166,19 @@ ig.module(
 
 				
 
-							this.circle.pos.x  = (this.pos.x + this.size.x/2) + Math.sin(-angle)*100; 
+							this.circle.pos.x  =(this.pos.x + this.size.x/2) + Math.sin(-angle)*100; 
 							this.circle.pos.y = (this.pos.y + this.size.y/2) + Math.cos(-angle)*100;
-							this.targetAngle = this.angleTo(this.circle);
+							if(this.circle)this.targetAngle = this.angleTo(this.circle);
 
 						}
 						
-						else if(ig.input.state('action5') ||ig.input.state('action6'))this.targetAngle = this.angleTo(this.circle);
-						else if(Math.abs(this.vel.y) > 0 || Math.abs(this.vel.x) > 0) this.targetAngle=Math.atan2(this.vel.y, this.vel.x);
+						//else if((ig.input.state(this.action5) ||ig.input.state(this.action6))&&this.circle)this.targetAngle = this.angleTo(this.circle);
+						else if(Math.abs(this.vel.y) > 0 || Math.abs(this.vel.x) > 0) {
+							this.targetAngle=Math.atan2(this.vel.y, this.vel.x);
+							this.circle.pos.x  =(this.pos.x + this.size.x/2) + Math.sin(-(this.targetAngle-Math.PI/2))*100; 
+							this.circle.pos.y = (this.pos.y + this.size.y/2) + Math.cos(-(this.targetAngle-Math.PI/2))*100;
+						
+						}
 						else{
 							this.targetAngle = this.angleTo(this.circle);
 						}
@@ -129,14 +187,140 @@ ig.module(
 
 		
 				}
+				else{
+					this.vel.y = 0;
+					this.vel.x = 0;
+					if(
+						(ig.input.state('up_5')  && ig.input.state('right_5') 
+							&& this.keyboardNro === 1)
+						) {
+						this.vel.y = -115;
+						this.vel.x = 115;
+
+					}
+					else if(
+						(ig.input.state('up_5')  && ig.input.state('left_5') )
+						&& this.keyboardNro === 1) {
+						this.vel.y = -115;
+						this.vel.x = -115;
+					}
+					else if(
+						(ig.input.state('down_5')  && ig.input.state('left_5') )
+						&& this.keyboardNro === 1) {
+
+						this.vel.y = 115;
+						this.vel.x = -115;
+
+					}
+					else if(
+						(ig.input.state('down_5')  && ig.input.state('right_5') )
+						&& this.keyboardNro === 1) {
+
+						this.vel.y = 115;
+						this.vel.x = 115;
+
+					}
+
+					if(ig.input.state('up_5') && this.keyboardNro === 1) {
+
+						this.vel.y = -115;
+				
+
+					}
+					else if(ig.input.state('down_5') && this.keyboardNro === 1) {
+
+						this.vel.y = 115;
+					
+
+					}
+					else if(ig.input.state('right_5') && this.keyboardNro === 1) {
+
+
+						this.vel.x = 115;
+
+					}
+					else if(ig.input.state('left_5') && this.keyboardNro === 1) {
+						this.vel.x = -115;
+
+					}
+
+				
+
+
+
+
+
+
+
+
+					if(
+						(ig.input.state('up_6')  && ig.input.state('right_6') 
+							)
+						&& this.keyboardNro === 0) {
+						this.vel.y = -115;
+						this.vel.x = 115;
+
+					}
+					else if(
+						(ig.input.state('up_6')  && ig.input.state('left_6') )
+						&& this.keyboardNro === 0) {
+						this.vel.y = -115;
+						this.vel.x = -115;
+					}
+					else if(
+						(ig.input.state('down_6')  && ig.input.state('left_6') )
+						&& this.keyboardNro === 0) {
+
+						this.vel.y = 115;
+						this.vel.x = -115;
+
+					}
+					else if(
+						(ig.input.state('down_6')  && ig.input.state('right_6') )
+						&& this.keyboardNro === 0) {
+
+						this.vel.y = 115;
+						this.vel.x = 115;
+
+					}
+
+					if(ig.input.state('up_6') && this.keyboardNro === 0) {
+
+						this.vel.y = -115;
+				
+
+					}
+					if(ig.input.state('down_6') && this.keyboardNro === 0) {
+
+						this.vel.y = 115;
+					
+
+					}
+					if(ig.input.state('right_6') && this.keyboardNro === 0) {
+
+
+						this.vel.x = 115;
+
+					}
+					if(ig.input.state('left_6') && this.keyboardNro === 0) {
+						this.vel.x = -115;
+
+					}
+
+					if(!(this.vel.y === 0 && this.vel.x === 0))	{	this.targetAngle=Math.atan2(this.vel.y, this.vel.x);}
 			
+					this.circle.pos.x  =(this.pos.x + this.size.x/2) + Math.sin(-(this.targetAngle-Math.PI/2))*100 - 8; 
+					this.circle.pos.y = (this.pos.y + this.size.y/2) + Math.cos(-(this.targetAngle-Math.PI/2))*100 - 8;
+
+				}
+				
 				this.prevX = this.pos.x;
 				this.prevY = this.pos.y;
 				this.changeAngleTo();
 
 				this.parent();
-
-				if(this.isColliding === false && this.pad && !(Math.abs(this.pad.rightStickX) > 0.50 && Math.abs(this.pad.rightStickY) > 0.50))
+/*
+				if(this.circle && this.isColliding === false && this.pad && !(Math.abs(this.pad.rightStickX) > 0.50 && Math.abs(this.pad.rightStickY) > 0.50))
 						{
 							
 							this.circle.pos.x += this.pos.x - this.prevX;
@@ -145,7 +329,7 @@ ig.module(
 				else{
 					this.isColliding = false;
 				}
-				
+				*/
 
 				
 						
@@ -161,7 +345,7 @@ ig.module(
 				{
 					if(ig.game.entities[i].isMonster  && ig.game.entities[i].target){ig.game.entities[i].target = null;}
 				}
-				ig.game.getEntityByName("circle1").kill();
+				this.circle.kill();
 
 				ig.game.removeEntity(this);
 
@@ -195,7 +379,7 @@ ig.module(
 				this.delayTimer = new ig.Timer();
 			this.delayTimer.set(1.5);
 			var sound = new ig.Sound( 'media/laser.ogg' );
-		sound.play();
+			sound.play();
 
 			},
 			update: function(){
@@ -238,18 +422,19 @@ ig.module(
 				
 			}
 			});
-			EntityCircle1 = ig.Entity.extend({
-				type: ig.Entity.TYPE.NONE,
-					collides: ig.Entity.COLLIDES.NEVER,
+			EntityCircle = ig.Entity.extend({
+			type: ig.Entity.TYPE.NONE,
+			collides: ig.Entity.COLLIDES.NEVER,
 			gravityFactor: 0,
 			size: {x: 16,y: 16},
 			offset: {x:0, y:0},
 			maxVel: {x: 600, y:600},
 			friction: { x: 0, y: 0 },
-			name: "circle1",
+			name: "circle",
+			imgurl: 'media/crosshair_red_16.png',
 			init: function(x,y,settings){
 				this.parent(x, y, settings );
-				this.animSheet = new ig.AnimationSheet('media/crosshair_red_16.png', 16, 16);
+				this.animSheet = new ig.AnimationSheet(this.imgurl, 16, 16);
 				this.addAnim('idle',1, [0]);
 			},
 			update: function(){
@@ -266,6 +451,7 @@ ig.module(
 
 			
 		});
+
 			EntityDeathExplosionParticle = ig.Entity.extend({
 		size: { x: 2, y: 2 },
 		maxVel: { x: 160, y: 200 },
